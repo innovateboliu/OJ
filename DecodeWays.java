@@ -37,36 +37,6 @@ public class DecodeWays {
         return arr[arr.length - 1];
 	}
 	
-	
-//    public int numDecodings(String s) {
-//          if (s == null || s.length() == 0) {
-//        	  return 0;
-//          }
-//          
-//          return helper(s, 0);
-//    }
-    
-    private int helper(String s, int idx) {
-    	if (idx == s.length()) {
-    		return 1;
-    	}
-    	if (idx == s.length() - 1) {
-    		if (isValid(s.substring(idx, s.length()))) {
-    			return 1;
-    		} else {
-    			return 0;
-    		}
-    	}
-    	
-    	int sum = 0;
-    	for (int i = 0; i < 2; i++) {
-    		if (isValid(s.substring(idx, idx+i+1))) {
-    			sum += helper(s, idx+i+1);
-    		}
-    	}
-    	
-    	return sum;
-    }
     
     private boolean isValid(String s) {
     	if (s == null || s.charAt(0) == '0') {
