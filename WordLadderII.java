@@ -1,10 +1,8 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -18,10 +16,18 @@ public class WordLadderII {
 		ins.findLadders("a", "c", new HashSet<String>(Arrays.asList("a", "b", "c")));
 	}
 	
+	
+	/*
+	 * 1. BFS/level traversed by using curLevelNum and lastLevelNum
+	 * 2. first found end is the nearest
+	 * 3. levelMap store the current word
+	 * 4. traversedMap store all traversed word
+	 * 5. store pre word info
+	 */
 	public ArrayList<ArrayList<String>> findLadders(String start, String end, HashSet<String> dict) {
 		ArrayList<ArrayList<String>> result = new ArrayList<>();
-		Map<String, ArrayList<String>> levelMap = new HashMap<>();
-		levelMap.put(end, new ArrayList<String>());
+		Map<String, ArrayList<String>> traversedMap = new HashMap<>();
+		traversedMap.put(end, new ArrayList<String>());
 		Queue<String> queue = new LinkedList<>();
 		queue.add(start);
 		
@@ -31,7 +37,7 @@ public class WordLadderII {
 		int curLevelNum = 0;
 		int lastLevelNum = 1;
 		
-		Map<String, ArrayList<String>> subMap = new HashMap<>();
+		Map<String, ArrayList<String>> levelMap = new HashMap<>();
 		
 		while (queue.size() > 0 ) {
 			String cur = queue.remove();
@@ -40,8 +46,8 @@ public class WordLadderII {
 				curLevelNum = lastLevelNum;
 				lastLevelNum = tmp;
 				curLevel++;
-				levelMap.putAll(subMap);
-				subMap.clear();
+				traversedMap.putAll(levelMap);
+				levelMap.clear();
 			}
 			lastLevelNum--;
 			
@@ -49,8 +55,6 @@ public class WordLadderII {
 			if (curLevel > minLevel) {
 				continue;
 			}
-			
-			
 			
 			for (int i = 0; i < cur.length(); i++) {
 				for (char c = 'a'; c <= 'z'; c++) {
@@ -61,25 +65,19 @@ public class WordLadderII {
 					String word = cur.substring(0, i) + c + cur.substring(i+1);
 					if (end.equals(word)) {
 						minLevel = Math.min(minLevel, curLevel);
-						levelMap.get(end).add(cur);
+						traversedMap.get(end).add(cur);
 						continue;
 					}
-					if (levelMap.containsKey(word)) {
+					if (traversedMap.containsKey(word)) {
 						continue;
 					} else {
 						if (dict.contains(word)) {
-//							if (word.equals("anne")) {
-//								int f = 0;
-//								f--;
-//							}
-							if (!subMap.containsKey(word)) {
-								subMap.put(word, new ArrayList<String>());
+							if (!levelMap.containsKey(word)) {
+								levelMap.put(word, new ArrayList<String>());
 								queue.add(word);
 								curLevelNum++;
 							}
-							subMap.get(word).add(cur);
-							
-							
+							levelMap.get(word).add(cur);
 						}
 					}
 				}
@@ -89,11 +87,8 @@ public class WordLadderII {
 		
 		ArrayList<String> path = new ArrayList<>();
 		path.add(0, end);
-		levelMap.get("acne");
-		levelMap.get("anne");
-		generatePath(start, end, result, levelMap, path);
+		generatePath(start, end, result, traversedMap, path);
 		
-//		System.out.println(result);
 		return result;
 		
 		
