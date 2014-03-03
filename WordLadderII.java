@@ -19,6 +19,7 @@ public class WordLadderII {
 	
 	/*
 	 * 1. BFS/level traversed by using curLevelNum and lastLevelNum
+	 * 2. Neighbor check by using letter replacement
 	 * 2. first found end is the nearest
 	 * 3. levelMap store the current word
 	 * 4. traversedMap store all traversed word
